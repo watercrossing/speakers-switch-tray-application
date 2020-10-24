@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="42px"
+   height="64px"
+   viewBox="0 0 42 64"
+   version="1.1"
+   id="svg36"
+   sodipodi:docname="icon-master.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata40">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Speaker</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#000000"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1524"
+     inkscape:window-height="1266"
+     id="namedview38"
+     showgrid="false"
+     inkscape:pagecheckerboard="false"
+     inkscape:zoom="15.75"
+     inkscape:cx="21"
+     inkscape:cy="32"
+     inkscape:window-x="1645"
+     inkscape:window-y="425"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Page-1" />
+  <!-- Generator: Sketch 3.5.1 (25234) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title26">Speaker</title>
+  <desc
+     id="desc28">Created with Sketch.</desc>
+  <defs
+     id="defs30" />
+  <g
+     id="Page-1"
+     stroke="none"
+     stroke-width="1"
+     fill="none"
+     fill-rule="evenodd"
+     sketch:type="MSPage">
+    <path
+       d="m 35,6 c -0.552,0 -1,0.448 -1,1 0,0.552 0.448,1 1,1 0.552,0 1,-0.448 1,-1 0,-0.552 -0.448,-1 -1,-1 z m 0.5,53 H 6.5 C 6.224,59 6,59.224 6,59.5 6,59.776 6.224,60 6.5,60 h 29 C 35.776,60 36,59.776 36,59.5 36,59.224 35.776,59 35.5,59 Z M 21,46 c -2.757,0 -5,-2.243 -5,-5 0,-2.757 2.243,-5 5,-5 2.757,0 5,2.243 5,5 0,2.757 -2.243,5 -5,5 z m 0,-11 c -3.314,0 -6,2.686 -6,6 0,3.314 2.686,6 6,6 3.314,0 6,-2.686 6,-6 0,-3.314 -2.686,-6 -6,-6 z m 0,-22 c 1.103,0 2,0.897 2,2 0,1.103 -0.897,2 -2,2 -1.103,0 -2,-0.897 -2,-2 0,-1.103 0.897,-2 2,-2 z m 0,5 c 1.657,0 3,-1.343 3,-3 0,-1.657 -1.343,-3 -3,-3 -1.657,0 -3,1.343 -3,3 0,1.657 1.343,3 3,3 z m 0,36 C 13.832,54 8,48.168 8,41 8,33.832 13.832,28 21,28 c 7.168,0 13,5.832 13,13 0,7.168 -5.832,13 -13,13 z M 21,26 C 12.716,26 6,32.716 6,41 6,49.284 12.716,56 21,56 29.284,56 36,49.284 36,41 36,32.716 29.284,26 21,26 Z M 21,8 c 3.86,0 7,3.14 7,7 0,3.86 -3.14,7 -7,7 -3.86,0 -7,-3.14 -7,-7 0,-3.86 3.14,-7 7,-7 z m 0,16 c 4.971,0 9,-4.029 9,-9 0,-4.971 -4.029,-9 -9,-9 -4.971,0 -9,4.029 -9,9 0,4.971 4.029,9 9,9 z m 19,35 c 0,1.654 -1.346,3 -3,3 H 5 C 3.346,62 2,60.654 2,59 V 5 C 2,3.346 3.346,2 5,2 h 32 c 1.654,0 3,1.346 3,3 z M 37,0 H 5 C 2.25,0 0,2.25 0,5 v 54 c 0,2.75 2.25,5 5,5 h 32 c 2.75,0 5,-2.25 5,-5 V 5 C 42,2.25 39.75,0 37,0 Z"
+       sketch:type="MSShapeGroup"
+       id="path32"
+       style="fill:#ffffff;fill-opacity:1" />
+  </g>
+</svg>
