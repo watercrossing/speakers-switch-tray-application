@@ -11,7 +11,7 @@ My monitor speakers do not have an accessible on/off switch, so I have them wire
 
 # Automatic turn off on shutdown
 
-It turns it is impossible to receive Windows 10 shutdown notices from [any application that is launched using `pythonw.exe`](https://stackoverflow.com/questions/64522390/). It seems the only solution to capture shutdowns is to use a Windows service. Hence `service.py`  contains a simple service that listens for shutdowns (and also for logout events, but it currently does nothing with these), and turns of the power to the speakers.
+It turns out it is impossible to receive Windows 10 shutdown notices from [any application that is launched using `pythonw.exe`](https://stackoverflow.com/questions/64522390/). It seems the only solution to capture shutdowns is to use a Windows service. Hence `service.py`  contains a simple service that listens for shutdowns (and also for logout events, but it currently does nothing with these), and turns of the power to the speakers.
 
 ## Installation
 
