@@ -71,7 +71,7 @@ def isThereAudioOutput():
         return False
     channels = df.shape[1]
     for i in range(channels):
-        loudness = window_rms(df[:,i], int(CFG['AUTOTURNOFF']['SECONDS']))
+        loudness = window_rms(df[:,i], int(CFG['AUTOTURNOFF']['LISTEN']))
         # lets say something is not noise if the 90 percentile is > 0.01. 
         # I have little evidence if this is any good.
         if np.percentile(loudness, 90) > float(CFG['AUTOTURNOFF']['LEVEL']):
