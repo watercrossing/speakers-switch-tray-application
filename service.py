@@ -21,7 +21,7 @@ import win32gui, win32gui_struct, win32con
 import urllib.request as r
 import json, configparser
 
-VERSION = 8
+VERSION = 9
 
 class SpeakerShutdown(win32serviceutil.ServiceFramework):
 
@@ -34,12 +34,16 @@ class SpeakerShutdown(win32serviceutil.ServiceFramework):
         logging.debug(f"Init was called, version {VERSION}")
         self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
         self.setupCFG()
+        servicemanager.LogMsg(
+                servicemanager.EVENTLOG_INFORMATION_TYPE,
+                servicemanager.PYS_SERVICE_STARTED,
+                (self._svc_name_, '')
+                )
     
     # Override the base class so we can accept additional events.
     def GetAcceptedControls(self):
         rc = win32serviceutil.ServiceFramework.GetAcceptedControls(self)
-        rc |= win32service.SERVICE_CONTROL_SHUTDOWN \
-              | win32service.SERVICE_ACCEPT_SESSIONCHANGE
+        rc |= win32service.SERVICE_ACCEPT_SESSIONCHANGE
         return rc
     
     # Override in order to process service shutdown requests.
@@ -79,6 +83,7 @@ class SpeakerShutdown(win32serviceutil.ServiceFramework):
         self.CFG = cfg
     
     def SvcStop(self):
+        logging.debug("Service has been told to stop.")
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
 
