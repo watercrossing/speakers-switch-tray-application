@@ -21,7 +21,7 @@ import win32gui, win32gui_struct, win32con
 import urllib.request as r
 import json, configparser
 
-VERSION = 9
+VERSION = 11
 
 class SpeakerShutdown(win32serviceutil.ServiceFramework):
 
@@ -43,7 +43,8 @@ class SpeakerShutdown(win32serviceutil.ServiceFramework):
     # Override the base class so we can accept additional events.
     def GetAcceptedControls(self):
         rc = win32serviceutil.ServiceFramework.GetAcceptedControls(self)
-        rc |= win32service.SERVICE_ACCEPT_SESSIONCHANGE
+        rc |= win32service.SERVICE_ACCEPT_SESSIONCHANGE \
+              | win32service.SERVICE_ACCEPT_POWEREVENT
         return rc
     
     # Override in order to process service shutdown requests.
@@ -61,9 +62,19 @@ class SpeakerShutdown(win32serviceutil.ServiceFramework):
             # data is a single elt tuple, but this could potentially grow
             # in the future if the win32 struct does
             logging.debug(f"Session event: type={event_type}, data={data}")
+            # 5 is logon, 6 is logoff, 7 is session lock, 8 is session unlock
             if event_type == 6: ## Logoff - could also turn off here, but shutdown is nicer?
                 pass
                 #self.turnPowerOff()
+        elif control == win32service.SERVICE_CONTROL_POWEREVENT:
+            logging.debug(f"A power event: type={event_type}, data={data}")
+            # 10 is "power status change", 18 is resume from lower power, 
+            # 7 is additional from 18 if resume was triggered by a human (i.e. keyboard), 
+            # 4 is suspending, 32787 is a power setting change event
+            if event_type == 4:
+                logging.info("Suspending event captured.")
+                self.turnPowerOff()
+
         else:
             logging.debug("Other event: code=%d, type=%s, data=%s" % (control, event_type, data))
 
