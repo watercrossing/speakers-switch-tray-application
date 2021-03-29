@@ -83,6 +83,8 @@ def regularAudioChecks(systray: SysTrayIcon):
     while systray._message_loop_thread.is_alive():
         state = getState(systray)
         if state == 'ON' and datetime.now() > disableUntil and bool(CFG['AUTOTURNOFF']['ENABLE']):
+            if disableUntil > datetime(1901):
+                disableAutoOff(systray, 0)
             audioChecks.append(isThereAudioOutput())
             logging.debug(audioChecks)
             # Turn off after x intervals of no outputs; this should be configurable.
@@ -96,11 +98,12 @@ def regularAudioChecks(systray: SysTrayIcon):
 
 def disableAutoOff(systray: SysTrayIcon, hours : int):
     global disableUntil
-    disableUntil = datetime.now() + timedelta(hours=hours)
     if hours > 0:
         systray.update(hover_text="Manage Speakers via IoT: auto-off disabled until " + disableUntil.strftime("%H:%M"))
+        disableUntil = datetime.now() + timedelta(hours=hours)
     else:
         systray.update(hover_text="Manage Speakers via IoT")
+        disableUntil = datetime(1900)
 
 
 def main():
