@@ -2,11 +2,23 @@ from infi.systray import SysTrayIcon
 import urllib.request as r
 import json, time, sys
 import numpy as np
+## comtypes needs to be imported before soundcard, idk why
+import comtypes
 import soundcard as sc
 from datetime import datetime, timedelta
 
 import logging, configparser, os
 
+import policyconfig as pc
+
+def switchSpeaker(switchTo):
+    logging.debug(f"Setting active speaker to {switchTo.name}")
+    policy_config = comtypes.CoCreateInstance(
+        pc.CLSID_PolicyConfigClient,
+        pc.IPolicyConfig,
+        comtypes.CLSCTX_ALL
+    )
+    policy_config.SetDefaultEndpoint(switchTo.id, pc.ERole.eMultimedia)
 
 
 def setupCFG(cfg):
@@ -25,26 +37,47 @@ def setupLogging():
 
 
 def runCMD(systray: SysTrayIcon, cmd: str):
+    # This gets run from both main thread and systray threat.
     try:
         status = json.loads(r.urlopen(CFG['APP']['BASEURL']+cmd).read())
         logging.debug(f"CMD {cmd}: {status}")
     except Exception:
         logging.exception("Something went wrong talking to the plug")
         setTrayIcon(systray, "ERROR")
-        return "ERR"
+        state = "ERR"
     else:
         setTrayIcon(systray, status['POWER'])
-        return status['POWER']
+        state = status['POWER']
+    systray.state = state
+    return state
     
 
 def getState(systray: SysTrayIcon):
-    return runCMD(systray, 'Power1')
+    systray.state = runCMD(systray, 'Power1')
+    return systray.state
 
 def toggle(systray: SysTrayIcon):
-    return runCMD(systray, 'Power1%20TOGGLE')
+    if systray.state == "ON":
+        return turnOff(systray)
+    elif systray.state == "OFF":
+        return turnOn(systray)
+    else:
+        return runCMD(systray, 'Power1%20TOGGLE')
 
 def turnOff(systray:SysTrayIcon):
     return runCMD(systray, 'Power1%20OFF')
+
+def turnOn(systray:SysTrayIcon):
+    ## check if the current output device matches the one to monitor
+    mainSpeaker = CFG['AUTOTURNOFF']['SPEAKERTOMONITOR']
+    if mainSpeaker not in sc.default_speaker().name:
+        try:
+            switchTo = next(x for x in sc.all_speakers() if mainSpeaker in x.name)
+        except StopIteration:
+            logging.error("Can't find the speaker to switch to!")
+        # switch output device to mainspeaker
+        switchSpeaker(switchTo)
+    return runCMD(systray, 'Power1%20ON')
 
 
 def setTrayIcon(systray: SysTrayIcon, status):
@@ -83,16 +116,33 @@ def regularAudioChecks(systray: SysTrayIcon):
     while systray._message_loop_thread.is_alive():
         state = getState(systray)
         if state == 'ON' and datetime.now() > disableUntil and bool(CFG['AUTOTURNOFF']['ENABLE']):
-            if disableUntil > datetime(1901):
-                disableAutoOff(systray, 0)
-            audioChecks.append(isThereAudioOutput())
-            logging.debug(audioChecks)
-            # Turn off after x intervals of no outputs; this should be configurable.
-            if len(audioChecks) > int(CFG['AUTOTURNOFF']['INTERVAL']):
-                audioChecks.pop(0)
-                if not any(audioChecks):
-                    turnOff(systray)
-                    audioChecks = []
+            # Check if there is a specific speaker to monitor, if empty it will match names.
+            # If this doesn't match than we don't care if there is audio output.
+            main_speaker = sc.default_speaker()
+            if CFG['AUTOTURNOFF']['SPEAKERTOMONITOR'] not in main_speaker.name:
+                turnOff(systray)
+            else:
+                if disableUntil > datetime(1901, 1, 2):
+                    disableAutoOff(systray, 0)
+                audioChecks.append(isThereAudioOutput())
+                logging.debug(audioChecks)
+                # Turn off after x intervals of no outputs; this should be configurable.
+                if len(audioChecks) > int(CFG['AUTOTURNOFF']['INTERVAL']):
+                    audioChecks.pop(0)
+                    logging.debug("AudioChecks: %s, any(): %s "%(repr(audioChecks), repr(any(audioChecks))))
+                    if not any(audioChecks):
+                        turnOff(systray)
+                        audioChecks = []
+                        SPEAKERIFOFF = CFG['AUTOTURNOFF']['SPEAKERIFOFF']
+                        if SPEAKERIFOFF:
+                            try:
+                                switchTo = next(x for x in sc.all_speakers() if SPEAKERIFOFF in x)
+                            except StopIteration:
+                                logging.error("Can't find the speaker to switch to!")
+                            # switch output device to other speaker
+                            switchSpeaker(switchTo)
+
+
         time.sleep(int(CFG['AUTOTURNOFF']['WAIT']))
     logging.debug("Quitting.")
 
@@ -103,7 +153,7 @@ def disableAutoOff(systray: SysTrayIcon, hours : int):
         disableUntil = datetime.now() + timedelta(hours=hours)
     else:
         systray.update(hover_text="Manage Speakers via IoT")
-        disableUntil = datetime(1900)
+        disableUntil = datetime(1901, 1, 1)
 
 
 def main():
@@ -113,7 +163,15 @@ def main():
                                                 ('3 hour', None, lambda x: disableAutoOff(x, 3)),
                                                 ('4 hour', None, lambda x: disableAutoOff(x, 4)) )),
                     ("Enable auto-off (default)", None, lambda x: disableAutoOff(x, 0)))
-    with SysTrayIcon("icons/icon-unsure.ico", "Manage Speakers via IoT", menu_options) as systray:
+    Systray = SysTrayIcon("icons/icon-unsure.ico", "Manage Speakers via IoT", menu_options)
+    ## Super hackish, but CoInitialize needs to be called in every threat that accesses COM modules
+    oldLoop = Systray._message_loop_func
+    def newMessagLoopFunc():
+        comtypes.CoInitialize()
+        oldLoop()
+    Systray._message_loop_func = newMessagLoopFunc
+
+    with Systray as systray:
         getState(systray)
         regularAudioChecks(systray)
 

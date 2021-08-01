@@ -2,3 +2,4 @@ infi.systray
 SoundCard
 numpy
 pywin32
+comtypes
