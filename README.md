@@ -1,6 +1,8 @@
 # Switch IoT Speakers from the task bar
 
-My monitor speakers do not have an accessible on/off switch, so I have them wired to a WiFi smart plug (which I flashed with [Tasmota](https://tasmota.github.io/docs/)). This application creates a tray icon that allows me to switch the speakers on and off. It also monitors the audio output, and if no sound output is detected for a while the speakers will be switched off. 
+My monitor speakers do not have an accessible on/off switch, so I have them wired to a WiFi smart plug (which I flashed with [Tasmota](https://tasmota.github.io/docs/)). This application creates a tray icon that allows me to switch the speakers on and off. It also monitors the audio output, and if no sound output is detected for a while the speakers will be switched off. Since the speakers pull in around 100W each, this saves quite a bit of energy!
+
+There is also an option to automatically change Windows' default audio output device when speakers are turned on and automatically turned off. In my case my display has (very poor) inbuild speakers, but they are still better than no audio.
 
 ## Installation
 
