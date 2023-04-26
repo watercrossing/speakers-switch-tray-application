@@ -19,7 +19,14 @@ It turns out it is impossible to receive Windows 10 shutdown notices from [any a
 
 * open the virtual environment in an elevated PS
 * run `python venv\Scripts\pywin32_postinstall.py -install` (from [SO](https://stackoverflow.com/questions/34696815/))
-* run `python service.py install`
-* open the Windows Services app to set the service to autostart, and to start the service.
+* run `python service.py --startup auto install`
+* open the Windows Services app to
+  * if the environment is installed in a home directory, the service needs to be started with that users' permissions
+  * start the service (or do this via `sc.exe start AutomaticSpeakerTurnOff`).
 
 It seems that Windows 10 version upgrades remove the service. I had to repeat the four steps above when upgrading to 2004.
+
+## Notes
+
+* [pywin32](https://github.com/mhammond/pywin32) has changed how services are called / installed in a non-backwards compatible manner. Should upgrade at some point! 
+* investigate https://github.com/mhammond/pywin32/issues/1450#issuecomment-1119014554 - maybe we don't need the `sys.path.insert` logic

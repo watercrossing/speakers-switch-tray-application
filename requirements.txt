@@ -1,5 +1,5 @@
 infi.systray
 SoundCard
 numpy
-pywin32
+pywin32==228
 comtypes

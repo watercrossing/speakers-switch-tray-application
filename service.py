@@ -1,7 +1,7 @@
 import os, logging, sys
 
 ## The service gets started in a strange place, rootdir should be the directory of this file.
-ROOTDIR = os.sep.join(os.getcwd().split(os.sep)[:-4])
+ROOTDIR = os.path.dirname(os.path.realpath(__file__))
 
 logging.basicConfig(format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
     datefmt='%m-%d %H:%M:%S',
@@ -9,8 +9,8 @@ logging.basicConfig(format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
     filename = ROOTDIR + '\\SpeakerShutdown-service.log',
 )
 
-sys.path.insert(0, ROOTDIR + '\\venv\\lib\\site-packages')
-sys.path.insert(0, ROOTDIR + '\\venv\\lib\\site-packages\\win32\\lib')
+sys.path.insert(0, ROOTDIR + '\\venv\\Lib\\site-packages')
+sys.path.insert(0, ROOTDIR + '\\venv\\Lib\\site-packages\\win32\\lib')
 
 import win32serviceutil, win32service
 import win32event
@@ -21,7 +21,7 @@ import win32gui, win32gui_struct, win32con
 import urllib.request as r
 import json, configparser
 
-VERSION = 11
+VERSION = 12
 
 class SpeakerShutdown(win32serviceutil.ServiceFramework):
 

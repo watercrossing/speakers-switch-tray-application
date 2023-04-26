@@ -136,7 +136,7 @@ def regularAudioChecks(systray: SysTrayIcon):
                         SPEAKERIFOFF = CFG['AUTOTURNOFF']['SPEAKERIFOFF']
                         if SPEAKERIFOFF:
                             try:
-                                switchTo = next(x for x in sc.all_speakers() if SPEAKERIFOFF in x)
+                                switchTo = next(x for x in sc.all_speakers() if SPEAKERIFOFF in x.name)
                             except StopIteration:
                                 logging.error("Can't find the speaker to switch to!")
                             # switch output device to other speaker
